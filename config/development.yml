@@ -1,0 +1,10 @@
+db:
+  host: 'localhost'
+  type: 'postgres'
+  username: 'postgres'
+  password: 'postgres'
+  database: 'cardoc_dev'
+  synchronize: true
+
+jwt:
+  secret: 'secret'
