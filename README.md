@@ -1,13 +1,14 @@
 # Assignment7-TW-NESJS
+[![wakatime](https://wakatime.com/badge/user/3f950649-8abb-464a-875e-2597e17bedb1/project/8e949169-a515-477a-a536-edc80c1cbf5a.svg)](https://wakatime.com/badge/user/3f950649-8abb-464a-875e-2597e17bedb1/project/8e949169-a515-477a-a536-edc80c1cbf5a)
 
 원티드x위코드 백엔드 프리온보딩 과제7 for NestJS
 - 과제 출제 기업 정보
   - 기업명 : 카닥
 
 ## Member
-| 이름  | github                                   |
+| 이름  | github                                  |
 |-------|-----------------------------------------|
-|김태우 |[jotasic](https://github.com/jotasic)     | 
+|김태우 |[jotasic](https://github.com/jotasic)    | 
 
 ## 과제 내용
 <details>

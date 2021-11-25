@@ -8,3 +8,4 @@ db:
 
 jwt:
   secret: 'secret'
+  expiresIn: 3600
