@@ -8,9 +8,11 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  Unique,
 } from 'typeorm';
 
 @Entity('users')
+@Unique(['id'])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   pk: number;
