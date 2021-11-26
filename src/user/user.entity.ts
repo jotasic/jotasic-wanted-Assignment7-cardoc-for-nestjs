@@ -1,4 +1,4 @@
-import { Tire } from 'src/cars/cars.entity';
+import { Tire } from 'src/car/car.entity';
 import {
   BaseEntity,
   Column,

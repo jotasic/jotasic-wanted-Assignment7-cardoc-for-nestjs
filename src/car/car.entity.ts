@@ -1,4 +1,4 @@
-import { UserTire } from 'src/users/users.entity';
+import { UserTire } from 'src/user/user.entity';
 import {
   BaseEntity,
   Column,
@@ -23,9 +23,6 @@ export class Tire extends BaseEntity {
   @Column()
   wheelSize: number;
 
-  @OneToMany((type) => UserTire, (userTire) => userTire.tire, { eager: false })
-  userTires: UserTire[];
-
   @CreateDateColumn()
   createdAt: Date;
 
@@ -34,4 +31,7 @@ export class Tire extends BaseEntity {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @OneToMany((type) => UserTire, (userTire) => userTire.tire, { eager: false })
+  userTires: UserTire[];
 }

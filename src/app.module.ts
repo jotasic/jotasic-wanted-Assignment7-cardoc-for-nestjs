@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
-import { CarsModule } from './cars/cars.module';
+import { UserModule } from './user/user.module';
+import { CarModule } from './car/car.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { typeORMConfig } from 'src/configs/typeorm.config';
-import { UserRepository, UserTireRepository } from './users/users.repository';
-import { TireRepository } from './cars/cars.repository';
+import { typeORMConfig } from 'src/configs/orm/typeorm.config';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeORMConfig), UsersModule, CarsModule],
+  imports: [TypeOrmModule.forRoot(typeORMConfig), UserModule, CarModule],
 })
 export class AppModule {}
