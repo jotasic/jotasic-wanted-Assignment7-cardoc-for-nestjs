@@ -1,12 +1,12 @@
+import * as config from 'config';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersController } from './users.controller';
-import { UserRepository, UserTireRepository } from './users.repository';
-import { TireRepository } from '../cars/cars.repository';
-import { UsersService } from './users.service';
 import { JwtModule } from '@nestjs/jwt';
-import * as config from 'config';
 import { PassportModule } from '@nestjs/passport';
+import { UserController } from './user.controller';
+import { UserService } from './user.service';
+import { UserRepository, UserTireRepository } from './user.repository';
+import { TireRepository } from '../car/car.repository';
 import { JwtStrategy } from './jwt.strategy';
 
 const jwtConfig = config.get('jwt');
@@ -24,8 +24,8 @@ const jwtConfig = config.get('jwt');
       UserTireRepository,
     ]),
   ],
-  controllers: [UsersController],
-  providers: [UsersService, JwtStrategy],
+  controllers: [UserController],
+  providers: [UserService, JwtStrategy],
   exports: [JwtStrategy, PassportModule],
 })
-export class UsersModule {}
+export class UserModule {}

@@ -2,15 +2,15 @@ import * as faker from 'faker';
 import * as bcrypt from 'bcryptjs';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TireRepository } from 'src/cars/cars.repository';
-import { UserRepository, UserTireRepository } from './users.repository';
-import { UsersService } from './users.service';
-import { AuthCredentialsDot } from './dto/auth-credential.dto';
-import { User } from './users.entity';
 import { BadRequestException } from '@nestjs/common';
+import { TireRepository } from 'src/car/car.repository';
+import { UserRepository, UserTireRepository } from './user.repository';
+import { AuthCredentialsDto } from './dto/auth-credential.dto';
+import { User } from './user.entity';
+import { UserService } from './user.service';
 
 describe('UsersService', () => {
-  let userService: UsersService;
+  let userService: UserService;
   let userRepository: UserRepository;
   let jwtService: JwtService;
 
@@ -25,14 +25,14 @@ describe('UsersService', () => {
         }),
       ],
       providers: [
-        UsersService,
+        UserService,
         UserRepository,
         TireRepository,
         UserTireRepository,
       ],
     }).compile();
 
-    userService = module.get<UsersService>(UsersService);
+    userService = module.get<UserService>(UserService);
     userRepository = module.get<UserRepository>(UserRepository);
     jwtService = module.get<JwtService>(JwtService);
   });
@@ -41,7 +41,7 @@ describe('UsersService', () => {
     it('SignUp success ', async () => {
       const id = faker.lorem.sentence();
       const password = faker.lorem.sentence();
-      const authCredentialsDot: AuthCredentialsDot = { id, password };
+      const authCredentialsDot: AuthCredentialsDto = { id, password };
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(password, salt);
       const token = {
@@ -63,7 +63,7 @@ describe('UsersService', () => {
     it('SignIn success ', async () => {
       const id = faker.lorem.sentence();
       const password = faker.lorem.sentence();
-      const authCredentialsDot: AuthCredentialsDot = { id, password };
+      const authCredentialsDot: AuthCredentialsDto = { id, password };
 
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -88,7 +88,7 @@ describe('UsersService', () => {
     it('SignIn failed - invalid id ', async () => {
       const id = faker.lorem.sentence();
       const password = faker.lorem.sentence();
-      const authCredentialsDot: AuthCredentialsDot = { id, password };
+      const authCredentialsDot: AuthCredentialsDto = { id, password };
 
       const userRepositoryFindOneSpy = jest
         .spyOn(userRepository, 'findOne')
@@ -106,7 +106,7 @@ describe('UsersService', () => {
       const id = faker.lorem.sentence();
       const password = faker.lorem.sentence();
       const invalidPassword = faker.lorem.sentence();
-      const authCredentialsDot: AuthCredentialsDot = {
+      const authCredentialsDot: AuthCredentialsDto = {
         id,
         password: invalidPassword,
       };
