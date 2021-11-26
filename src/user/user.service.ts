@@ -9,6 +9,7 @@ import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { JwtService } from '@nestjs/jwt';
 import { TrimRegistrationDto } from './dto/trim-registration.dto';
 import { TireRegistrationDto } from 'src/car/dto/tire-registration.dto';
+import { Tire } from 'src/car/car.entity';
 
 const TRIM_API_URL = 'https://dev.mycar.cardoc.co.kr/v1/trim';
 
@@ -122,5 +123,20 @@ export class UserService {
     };
 
     return tireRegistrationDto;
+  }
+
+  async getUsersTires(id: string): Promise<Tire[]> {
+    const user = await this.userRepository.findOne({ id });
+
+    if (!user) {
+      throw new BadRequestException('Dose not exist user');
+    }
+
+    return await this.tireRepository
+      .createQueryBuilder('tire')
+      .innerJoin('tire.userTires', 'userTire')
+      .select(['tire.width', 'tire.aspectRatio', 'tire.wheelSize'])
+      .where('userTire.user =:user', { user: user.pk })
+      .getMany();
   }
 }

@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
+  Param,
   Post,
   UseGuards,
   ValidationPipe,
@@ -40,5 +42,12 @@ export class UserController {
     trimRegistrationDto: TrimRegistrationDto[],
   ) {
     return this.userService.registerTires(trimRegistrationDto);
+  }
+
+  @Get('/:id/tires')
+  @HttpCode(200)
+  @UseGuards(AuthGuard())
+  getUsersTires(@Param('id') id: string) {
+    return this.userService.getUsersTires(id);
   }
 }
