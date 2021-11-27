@@ -9,10 +9,10 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthCredentialsDto } from './dto/auth-credential.dto';
-import { TrimRegistrationDto } from './dto/trim-registration.dto';
-import { ParseArrayMaxMinLenPipe } from '../common/pips/parse-array-max-min-len.pipe';
-import { UserService } from './user.service';
+import { AuthCredentialsDto } from '@user/dto/auth-credential.dto';
+import { TrimRegistrationDto } from '@user/dto/trim-registration.dto';
+import { ParseArrayMaxMinLenPipe } from '@root/common/pips/parse-array-max-min-len.pipe';
+import { UserService } from '@user/user.service';
 
 @Controller('users')
 export class UserController {

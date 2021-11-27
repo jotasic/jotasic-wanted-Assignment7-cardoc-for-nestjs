@@ -3,16 +3,15 @@ import * as bcrypt from 'bcryptjs';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException } from '@nestjs/common';
-import { TireRepository } from 'src/car/car.repository';
-import { UserRepository, UserTireRepository } from './user.repository';
-import { AuthCredentialsDto } from './dto/auth-credential.dto';
-import { User, UserTire } from './user.entity';
-import { UserService } from './user.service';
-import { TrimRegistrationDto } from './dto/trim-registration.dto';
-import { Tire } from 'src/car/car.entity';
+import { TireRepository } from '@car/car.repository';
+import { UserRepository, UserTireRepository } from '@user/user.repository';
+import { AuthCredentialsDto } from '@user/dto/auth-credential.dto';
+import { User, UserTire } from '@user/user.entity';
+import { UserService } from '@user/user.service';
+import { TrimRegistrationDto } from '@user/dto/trim-registration.dto';
+import { Tire } from '@car/car.entity';
 import axios from 'axios';
-import { TireRegistrationDto } from 'src/car/dto/tire-registration.dto';
-import { SelectQueryBuilder } from 'typeorm';
+import { TireRegistrationDto } from '@car/dto/tire-registration.dto';
 
 describe('UsersService', () => {
   let userService: UserService;

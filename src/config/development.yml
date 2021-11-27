@@ -1,3 +1,6 @@
+server:
+  port: 3000
+
 db:
   host: 'localhost'
   type: 'postgres'
@@ -5,6 +8,7 @@ db:
   password: 'postgres'
   database: 'cardoc_dev'
   synchronize: true
+  port: 5432
 
 jwt:
   secret: 'secret'

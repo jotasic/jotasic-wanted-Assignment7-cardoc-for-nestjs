@@ -2,14 +2,14 @@ import axios from 'axios';
 import * as bcrypt from 'bcryptjs';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserRepository, UserTireRepository } from './user.repository';
-import { TireRepository } from '../car/car.repository';
-import { User } from './user.entity';
-import { AuthCredentialsDto } from './dto/auth-credential.dto';
+import { UserRepository, UserTireRepository } from '@user/user.repository';
+import { TireRepository } from '@car/car.repository';
+import { User } from '@user/user.entity';
+import { AuthCredentialsDto } from '@user/dto/auth-credential.dto';
 import { JwtService } from '@nestjs/jwt';
-import { TrimRegistrationDto } from './dto/trim-registration.dto';
-import { TireRegistrationDto } from 'src/car/dto/tire-registration.dto';
-import { Tire } from 'src/car/car.entity';
+import { TrimRegistrationDto } from '@user/dto/trim-registration.dto';
+import { TireRegistrationDto } from '@car/dto/tire-registration.dto';
+import { Tire } from '@car/car.entity';
 
 const TRIM_API_URL = 'https://dev.mycar.cardoc.co.kr/v1/trim';
 

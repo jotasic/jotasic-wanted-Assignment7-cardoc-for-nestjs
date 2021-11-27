@@ -1,12 +1,9 @@
 import * as bcrypt from 'bcryptjs';
-import {
-  ConflictException,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
-import { AuthCredentialsDto } from './dto/auth-credential.dto';
-import { User, UserTire } from './user.entity';
-import { ExtendedRepository } from 'src/common/classes/advanced-repository.class';
+import { AuthCredentialsDto } from '@user/dto/auth-credential.dto';
+import { User, UserTire } from '@user/user.entity';
+import { ExtendedRepository } from '@root/common/classes/advanced-repository.class';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -19,11 +16,7 @@ export class UserRepository extends Repository<User> {
     try {
       await user.save();
     } catch (error) {
-      if (error.code === '23505') {
-        throw new ConflictException('Existing username');
-      } else {
-        throw new InternalServerErrorException();
-      }
+      throw new BadRequestException('Existing id');
     }
     return user;
   }
