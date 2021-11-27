@@ -46,7 +46,7 @@ export class UserService {
     }
   }
 
-  async genAccessToken(user: User): Promise<{ token: string }> {
+  private async genAccessToken(user: User): Promise<{ token: string }> {
     return { token: this.jwtService.sign({ id: user.id }) };
   }
 
@@ -87,24 +87,6 @@ export class UserService {
       }
     }
   }
-  private async getTireInfo(trimId: number): Promise<string[]> {
-    const result = await axios.get(`${TRIM_API_URL}/${trimId}`, {
-      timeout: 1000,
-    });
-
-    const tires = Array.from(
-      new Set([
-        result?.data?.spec?.driving?.frontTire?.value,
-        result?.data?.spec?.driving?.rearTire?.value,
-      ]),
-    );
-
-    return tires.reduce((pre, cur) => {
-      const tire = this.parserTireInfo(cur);
-      if (tire) pre.push(tire);
-      return pre;
-    }, []);
-  }
 
   private parserTireInfo(tireInfo): TireRegistrationDto {
     tireInfo = tireInfo?.replaceAll(' ', '').toUpperCase();
@@ -117,9 +99,9 @@ export class UserService {
     tireInfo = tireInfo.substring(matched.index, tireInfo.length);
     tireInfo = tireInfo.replace('/', '-').replace('R', '-').split('-');
     const tireRegistrationDto: TireRegistrationDto = {
-      width: tireInfo[0],
-      aspectRatio: tireInfo[1],
-      wheelSize: tireInfo[2],
+      width: parseInt(tireInfo[0]),
+      aspectRatio: parseInt(tireInfo[1]),
+      wheelSize: parseInt(tireInfo[2]),
     };
 
     return tireRegistrationDto;
@@ -138,5 +120,24 @@ export class UserService {
       .select(['tire.width', 'tire.aspectRatio', 'tire.wheelSize'])
       .where('userTire.user =:user', { user: user.pk })
       .getMany();
+  }
+
+  private async getTireInfo(trimId: number): Promise<string[]> {
+    const result = await axios.get(`${TRIM_API_URL}/${trimId}`, {
+      timeout: 1000,
+    });
+
+    const tires = Array.from(
+      new Set([
+        result?.data?.spec?.driving?.frontTire?.value,
+        result?.data?.spec?.driving?.rearTire?.value,
+      ]),
+    );
+
+    return tires.reduce((pre, cur) => {
+      const tire = this.parserTireInfo(cur);
+      if (tire) pre.push(tire);
+      return pre;
+    }, []);
   }
 }
