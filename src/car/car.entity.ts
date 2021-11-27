@@ -1,4 +1,3 @@
-import { UserTire } from 'src/user/user.entity';
 import {
   BaseEntity,
   Column,
@@ -8,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { UserTire } from '@user/user.entity';
 
 @Entity('tires')
 export class Tire extends BaseEntity {
