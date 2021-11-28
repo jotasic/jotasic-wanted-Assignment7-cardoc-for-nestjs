@@ -119,7 +119,7 @@
 </details>
 
 ## 사용 기술 및 tools
-> - Back-End :  <img src="https://img.shields.io/badge/Nest_JS_8.1-d6003d?style=for-the-badge&logo=nestjs&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/PostgreSQL 14.0-0064a5?style=for-the-badge&logo=PostgreSQL&logoColor=white"/>
+> - Back-End : <img src="https://img.shields.io/badge/Type Script-d6003d?style=for-the-badge&logo=typescript&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Nest_JS_8.1-d6003d?style=for-the-badge&logo=nestjs&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/PostgreSQL 14.0-0064a5?style=for-the-badge&logo=PostgreSQL&logoColor=white"/>
 > - Deploy : <img src="https://img.shields.io/badge/AWS_EC2-232F3E?style=for-the-badge&logo=Amazon&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Docker-0052CC?style=for-the-badge&logo=Docker&logoColor=white"/>
 > - ETC :  <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=Github&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white"/>&nbsp;
 
@@ -171,19 +171,137 @@
     git clone https://github.com/Wanted-Preonboarding-Backend-1st-G5/Assignment7-TW-NESTJS
     cd Assignment7-TW-NESTJS
     ```
+  
+2. .env.example 파일을 복사해서 .env파일을 바꾸고 안의 내용을 변경한다.
+    ```env
+    #APP
+    APP_PORT=3000
+
+    #DATABASE
+    #DB_HOST db 컨테이너 이름
+    DB_HOST=cardoc-dev-db
+    DB_TYPE=postgres
+    DB_USERNAME=postgres
+    DB_PASSWORD=postgres
+    DB_NAME=cardoc_dev
+    DB_SYNCHRONIZE=true
+    DB_PORT=5432
+
+    #JWT
+    JWT_KEY=secret
+    JWT_EXPIRES_IN=7d
+    ```
+3. node.js를 설치합니다.
+  
+4. docker-compose를 실행해서 db를 구동 시킵니다.
+  
+    ```bash
+    docker-compose -f docker-compose-dev.yml up -d
+    ```
+  
+5. 아래 명령어로 node 패키지를 다운 받습니다.
+  
+   ```bash
+   node install
+   ```
+6. 서버를 실행 시킵니다.
+  
+  ```bash
+  node run start:dev
+  ```
+  
 ###  배포용 
 1. 해당프로젝트를 clone 하고, 프로젝트 폴더로 들어간다.
+  
     ```bash
     git clone https://github.com/Wanted-Preonboarding-Backend-1st-G5/Assignment7-TW-NESTJS
     cd Assignment7-TW-NESTJS
     ```
+2. .env.example 파일을 복사해서 .env파일을 바꾸고 안의 내용을 변경한다.
+    ```env
+    #APP
+    APP_PORT=3000
+
+    #DATABASE
+    #DB_HOST db 컨테이너 이름
+    DB_HOST=cardoc-prod-db
+    DB_TYPE=postgres
+    DB_USERNAME=postgres
+    DB_PASSWORD=postgres
+    DB_NAME=cardoc_prod
+    DB_SYNCHRONIZE=false
+    DB_PORT=5432
+
+    #JWT
+    JWT_KEY=secret
+    JWT_EXPIRES_IN=7d
+    ```
+3. docker-compose명령어로 서버 및 db 컨테이너를 실행한다.
   
+    ```bash
+    docker-compose -f docker-compose-prod.yml up -d
+    ```
+
 </div>
 </details>
 
 ## 폴더 구조
 ```bash
-
+📦 ssignment7-TW-NESTJS
+ ┣ 📂 src
+ ┃ ┣ 📂 car
+ ┃ ┃ ┣ 📂 dto
+ ┃ ┃ ┃ ┗ 📜 tire-registration.dto.ts
+ ┃ ┃ ┣ 📜 car.entity.ts
+ ┃ ┃ ┣ 📜 car.module.ts
+ ┃ ┃ ┗ 📜 car.repository.ts
+ ┃ ┣ 📂 common
+ ┃ ┃ ┣ 📂 classes
+ ┃ ┃ ┃ ┗ 📜 advanced-repository.class.ts
+ ┃ ┃ ┗ 📂 pips
+ ┃ ┃ ┃ ┗ 📜 parse-array-max-min-len.pipe.ts
+ ┃ ┣ 📂 database
+ ┃ ┃ ┣ 📜 database.module.ts
+ ┃ ┃ ┗ 📜 database.service.ts
+ ┃ ┣ 📂 migrations
+ ┃ ┃ ┣ 📜 1638078926052-UserTableCreate.ts
+ ┃ ┃ ┣ 📜 1638078938422-TireTableCreate.ts
+ ┃ ┃ ┗ 📜 1638078944324-UserTireTableCreate.ts
+ ┃ ┣ 📂 user
+ ┃ ┃ ┣ 📂 dto
+ ┃ ┃ ┃ ┣ 📜 auth-credential.dto.ts
+ ┃ ┃ ┃ ┗ 📜 trim-registration.dto.ts
+ ┃ ┃ ┣ 📜 jwt.strategy.ts
+ ┃ ┃ ┣ 📜 user.controller.ts
+ ┃ ┃ ┣ 📜 user.entity.ts
+ ┃ ┃ ┣ 📜 user.module.ts
+ ┃ ┃ ┣ 📜 user.repository.ts
+ ┃ ┃ ┣ 📜 user.service.spec.ts
+ ┃ ┃ ┗ 📜 user.service.ts
+ ┃ ┣ 📜 app.module.ts
+ ┃ ┣ 📜 app.service.ts
+ ┃ ┗ 📜 main.ts
+ ┣ 📂 test
+ ┃ ┣ 📜 app.e2e-spec.ts
+ ┃ ┗ 📜 jest-e2e.json
+ ┣ 📜 .dockerignore
+ ┣ 📜 .env
+ ┣ 📜 .env.example
+ ┣ 📜 .eslintrc.js
+ ┣ 📜 .gitignore
+ ┣ 📜 .prettierrc
+ ┣ 📜 Dockerfile.prod
+ ┣ 📜 README.md
+ ┣ 📜 docker-compose-dev.yml
+ ┣ 📜 docker-compose-prod.yml
+ ┣ 📜 nest-cli.json
+ ┣ 📜 ormconfig.ts
+ ┣ 📜 package-lock.json
+ ┣ 📜 package.json
+ ┣ 📜 pull_request_template.md
+ ┣ 📜 tsconfig.build.json
+ ┣ 📜 tsconfig.json
+ ┗ 📜 tsconfig.paths.json
 ```
 
 
