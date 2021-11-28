@@ -5,6 +5,8 @@
 - 과제 출제 기업 정보
   - 기업명 : 카닥
 
+> 이 과제를 django로도 구현하였습니다. 우측 링크를 참고해주세요 [github링크](https://github.com/Wanted-Preonboarding-Backend-1st-G5/Assignment7-TW)
+
 ## Member
 | 이름  | github                                  |
 |-------|-----------------------------------------|
@@ -119,27 +121,99 @@
 </details>
 
 ## 사용 기술 및 tools
-> - Back-End : <img src="https://img.shields.io/badge/Type Script-d6003d?style=for-the-badge&logo=typescript&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Nest_JS_8.1-d6003d?style=for-the-badge&logo=nestjs&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/PostgreSQL 14.0-0064a5?style=for-the-badge&logo=PostgreSQL&logoColor=white"/>
+> - Back-End : <img src="https://img.shields.io/badge/Type Script-2762B9?style=for-the-badge&logo=typescript&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Nest_JS_8.1-d6003d?style=for-the-badge&logo=nestjs&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/PostgreSQL 14.0-0064a5?style=for-the-badge&logo=PostgreSQL&logoColor=white"/>
 > - Deploy : <img src="https://img.shields.io/badge/AWS_EC2-232F3E?style=for-the-badge&logo=Amazon&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Docker-0052CC?style=for-the-badge&logo=Docker&logoColor=white"/>
 > - ETC :  <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=Github&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white"/>&nbsp;
 
 ## 모델링
+![image](https://user-images.githubusercontent.com/8219812/143773342-f3bb33c2-78a3-47bf-a828-774e5c8bbde9.png)
+
 
 ## API
+- [Postman Doc](https://documenter.getpostman.com/view/16042359/UVJcjvyt)
 
 
 ## 서버구조 및 아키텍쳐
 
+![image](https://user-images.githubusercontent.com/8219812/143772166-cf630868-3a19-4e0b-8af4-15392521f2c4.png)
+
+### 모듈 구조
+![image](https://user-images.githubusercontent.com/8219812/143772188-7daf32c5-8e8d-41a5-ad5b-aa6b11359322.png)
+
+- 현재 구성으로는 user 모듈쪽에서 모든 endpoint를 처리합니다.
+- 해당 id의 tire를 조회하는 기능도 user 중심이라고 생각하여, UserModule에 구현하였습니다.
+- Car 모듈의 경우 TireRepository 만 있는 상태이며, Trie 단독 조회의 기능이 없었기 때문에 Car 모듈쪽에 서비스, 컨트롤러를 구현하지 않았습니다.
+- 추후 기능기 추가되면 user모듈에서 인증부분만 빼서 새로운 모듈을 만들 수 있을것으로 생각됩니다.
+
 
 ## 구현 기능
 
+
 ### 사용자 생성 API
+- id와 password를 입력받아서 유효성 체크 후, 회원가입을 합니다.
+- 회원가입이 성공하면, AccessToken을 반환합니다.
+- 인증 기능은 Passport를 사용하고, JwtStrategy를 구현하여 입력된 토큰이 올바른지와 복호화된 토큰의 정보가 존재하는 user인지 체크 합니다.
 
 
 ### 사용자가 소유한 타이어 정보를 저장하는 API
+- API의 정보를 front rear trie 2종류의 정보가 존재하지만 동일한 타이어라고 가정하고 진행하였습니다. 즉 하나의 trim을 요청해도 frontTire rearTrie가 다르면 tires table에 2개의 row가 생기도록 하였습니다.
+- 타이어 등록을 위해서 해야되는 작업중 외부 API를 요청하는 작업을 최대로 줄여야 겠다는 생각을 하였고, trimId 기준으로 어떠한 id가 존재하고, trimId 해당되는 타이어 정보를 data로 정하였습니다.
+- ex : [{trimId : {id:[ids..], tires:[dto...]}}...]
+```json
+  [ 
+    {
+      "5000" : {
+        "id":["cardoc", "cardoc2"],
+        "tires":[
+                 {"width": 260, "aspectRatio:60", "wheelSize":15}, 
+                 {"width": 255, "aspectRatio:50", "wheelSize":16}
+                ]
+             }
+     }
+   ]
+```
+정리 후, Tire 및 UserTire에 값을 등록하였습니다.
 
 
 ### 사용자가 소유한 타이어 정보 조회 API
+- TypeORM에서 제공해주는 Repository의 createQueryBuilder()를 사용해서 tires, user_tires 2개의 테이블을 조인하고, 조인한 결과에서 특정 id에 속한 data만 리턴하는 방식으로 로직을 작성하였습니다.
+```ts
+  this.tireRepository
+      .createQueryBuilder('tire')
+      .innerJoin('tire.userTires', 'userTire')
+      .select(['tire.width', 'tire.aspectRatio', 'tire.wheelSize'])
+      .where('userTire.user =:user', { user: user.pk })
+      .getMany();
+```
+
+### 미흡한점
+- 현재 외부 API호출 시, 없는 trim값을 입력해서 보내면 서버가 죽습니다.
+- 이유는 현재 http 호출을 위해서 axios 모듈을 사용하는데, 이것에 대한 에러처리가 이루워지지 않았습니다.
+- 왜냐면 호출되는 부분은 비동기 함수내에서 호출됩니다.
+```ts
+  private async getTireInfo(trimId: number): Promise<string[]> {
+    const result = await axios.get(`${TRIM_API_URL}/${trimId}`, {
+      timeout: 1000,
+    });
+```
+
+- 그리고 이 함수는 reduce안에서 호출됩니다.
+```ts
+const organizedData = trimRegistrationDto.reduce((pre, cur) => {
+      if (pre[cur.trimId]) {
+        pre[cur.trimId].id.add(cur.id);
+      } else {
+        pre[cur.trimId] = {
+          id: new Set([cur.id]),
+          tires: this.getTireInfo(cur.trimId),
+        };
+      }
+      return pre;
+    }, {});
+```
+- 이런경우 어떻게 error처리를 하면 좋을지에 대해서 고민이 되여 아직 하지 못하였습니다.
+
+
 
 
 ## 배포정보
@@ -155,7 +229,27 @@
   <summary><b>API TEST 방법 자세히 보기</b></summary>
 <div markdown="1">
 
+1. 우측 링크를 클릭해서 Postman으로 들어갑니다. [링크](https://www.postman.com/wecode-21-1st-kaka0/workspace/assignment7-cardoc/collection/16042359-a366ebbd-8548-41b4-9793-986bd6d81a8a?ctx=documentation)
 
+2. Postman 우측 상단에  ENVIRONMENT 설정 버튼를 클릭해서(눈 모양) `NEST_SERVER_URL` 설정이 올바른지 확인합니다. (http://18.188.189.173:8062) 올바르지 않으면 수정합니다.
+
+![image](https://user-images.githubusercontent.com/8219812/143769822-5bc988b5-ccb0-410f-b680-77cab5d15f24.png)
+
+3. 제공한 회원가입 API를 이용해서 `Cardoc-Nestjs` 탭에 있는 회원가입을 진행합니다. 회원가입이 성공하면 Access을 반환합니다.
+
+  ![image](https://user-images.githubusercontent.com/8219812/143769854-3a25d3b2-5f8e-4923-93d6-031b74ffd473.png)
+
+  
+4. Access 토큰을 이미지를 참고해서 입력하고, 저장합니다.
+
+![image](https://user-images.githubusercontent.com/8219812/143769885-878389d1-16df-4a75-835f-4b455d404400.png)
+  
+5. 이제 Access Token이 설정되었기 때문에, 다른 API를 호출할 수 있습니다.
+
+6 만약 Send 버튼이 비활성화 이시면 fork를 이용해서 해당 postman project를 복사해서 시도하길 바랍니다.
+  
+  ![image](https://user-images.githubusercontent.com/8219812/143040169-cb3bbba5-7583-4937-b5b6-35489bcd5c7d.png)
+  
 </div>
 </details>
 
