@@ -10,14 +10,14 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
       namingStrategy: new SnakeNamingStrategy(),
-      type: this.configService.get<string>('db.type') as any,
-      host: this.configService.get<string>('db.host'),
-      port: this.configService.get<number>('db.port', 5432),
-      username: this.configService.get<string>('db.username'),
-      password: this.configService.get<string>('db.password'),
-      database: this.configService.get<string>('db.database'),
+      type: this.configService.get<string>('DB_TYPE') as any,
+      host: this.configService.get<string>('DB_HOST'),
+      port: this.configService.get<number>('DB_PORT'),
+      username: this.configService.get<string>('DB_USERNAME'),
+      password: this.configService.get<string>('DB_PASSWORD'),
+      database: this.configService.get<string>('DB_NAME'),
       entities: [__dirname + '/../**/*.entity.{js,ts}'],
-      synchronize: this.configService.get<boolean>('db.synchronize'),
+      synchronize: this.configService.get<boolean>('DB_SYNCHRONIZE'),
     };
   }
 }
