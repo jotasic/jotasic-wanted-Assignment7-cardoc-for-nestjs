@@ -22,7 +22,7 @@ services:
       dockerfile: ./Dockerfile.prod
     restart: always
     volumes:
-      - ./:/usr/src/app
+      - appdata:/app
     ports:
       - ${APP_PORT}:${APP_PORT}
     depends_on:
@@ -33,4 +33,7 @@ services:
       - |
         /wait-for-it.sh cardoc-prod-db:${DB_PORT} -t 15
         npm run migration:run
-        npm run start:prod
+        npm run start
+volumes:
+  appdata:
+    driver: local
