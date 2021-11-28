@@ -1,7 +1,7 @@
 version: "3.8"
 services:
- cardoc-dev-db:
-    container_name: cardoc-dev-db
+ cardoc-prod-db:
+    container_name: cardoc-prod-db
     image: postgres:14-alpine
     restart: always
     command: postgres -c listen_addresses='*'
@@ -13,25 +13,24 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME} 
       - POSTGRES_USER=${DB_USERNAME}
-    ports:
-      - 5432:5432
     expose:
       - 5432
- cardoc-dev-app:
-    container_name: cardoc-dev-app
+ cardoc-prod-app:
+    container_name: cardoc-prod-app
     build:
       context: ./
-      dockerfile: ./Dockerfile.dev
+      dockerfile: ./Dockerfile.prod
     restart: always
     volumes:
       - ./:/usr/src/app
     ports:
       - ${APP_PORT}:${APP_PORT}
     depends_on:
-      - cardoc-dev-db
+      - cardoc-prod-db
     command:
       - bash
       - -c
       - |
-        /wait-for-it.sh cardoc-dev-db:${DB_PORT} -t 15
-        npm run start:dev
+        /wait-for-it.sh cardoc-prod-db:${DB_PORT} -t 15
+        npm run migration:run
+        npm run start:prod

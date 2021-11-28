@@ -12,6 +12,7 @@ import { TrimRegistrationDto } from '@user/dto/trim-registration.dto';
 import { Tire } from '@car/car.entity';
 import axios from 'axios';
 import { TireRegistrationDto } from '@car/dto/tire-registration.dto';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 describe('UsersService', () => {
   let userService: UserService;
@@ -23,11 +24,17 @@ describe('UsersService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        JwtModule.register({
-          secret: 'secret',
-          signOptions: {
-            expiresIn: 3600,
+        JwtModule.registerAsync({
+          imports: [ConfigModule.forRoot()],
+          useFactory: (configService: ConfigService) => {
+            return {
+              secret: configService.get<string>('JWT_KEY'),
+              signOptions: {
+                expiresIn: configService.get('JWT_EXPIRES_IN'),
+              },
+            };
           },
+          inject: [ConfigService],
         }),
       ],
       providers: [

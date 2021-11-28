@@ -20,8 +20,9 @@
     "paths": {
       "@root/*": ["src/*"],
       "@user/*": ["src/user/*"],
-      "@car/*": ["src/car/*"],
+      "@car/*": ["src/car/*"]
     },
 
-  }
+  },
+  "exclude": ["node_modules", "dist", "db_data"]
 }
