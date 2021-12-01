@@ -219,8 +219,6 @@ const organizedData = trimRegistrationDto.reduce((pre, cur) => {
 - 이런경우 어떻게 error처리를 하면 좋을지에 대해서 고민이 되여 아직 하지 못하였습니다.
 
 
-
-
 ## 배포정보
 |구분   |  정보          |비고|
 |-------|----------------|----|
